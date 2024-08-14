@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <time.h>
 
+#include "libs/loader.h" //依赖库加载器
+
 #include "core/config.h"
 #include "core/public.c"
 
@@ -11,8 +13,7 @@
 #include "core/block.h"
 #include "core/chain.h"
 
-#include "libs/loader.h" //依赖库加载器
-
+#include "core/signature.c"
 #include "core/transaction.c"
 #include "core/block.c"
 #include "core/chain.c"
@@ -29,8 +30,7 @@ int main(){
     Chain* chain = chain_create();
     srand((unsigned int)time(NULL));
 
-    randBlock(chain); //随机生成有transaction的区块
-    randBlockBuilderNone(chain); //随机生成没有transaction的区块
+    randBlock(chain); //随机生成区块
 
     displayChainBlock(chain); //展示所有区块链
     chain_vaild(chain); //验证区块链
