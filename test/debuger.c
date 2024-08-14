@@ -25,7 +25,7 @@ void generateRandomString(char *str, size_t length) {
     }
 }
 
-void randTransaction(Chain* chain){
+void randTransaction(Chain* chain, const char* key){
     Transaction* trans = (Transaction *)malloc(sizeof(Transaction));
     char address[32] = {0};
     char addressTo[32] = {0};
@@ -45,28 +45,16 @@ void randTransaction(Chain* chain){
     printf("amount: %ld\n", trans -> amount);
     printf("+++++++++++++++\n");
     */
-    chain_transaction_add(chain, trans);
+    chain_transaction_add(chain, trans, key);
+    free(trans);
 }
 
-void randBlock(Chain* chain){
+void randBlock(Chain* chain, const char* key){
     int counts = rand() % 9;
     for(int i = 0;i < counts;i++){
-        randTransaction(chain);
+        randTransaction(chain, key);
     }
     chain_block_add(chain);
 }
 
-void randBlockBuilderNone(Chain* chain){
-    int counts = rand() % 15;
-    for(int i = 0;i < counts;i++){
-        chain_block_add(chain);
-    }
-}
-
-void randBlockBuilder(Chain* chain){
-    int counts = rand() % 5;
-    for(int i = 0;i < counts;i++){
-        randBlock(chain);
-    }
-}
 

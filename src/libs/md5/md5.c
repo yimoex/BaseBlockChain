@@ -161,3 +161,10 @@ void MD5Transform(unsigned int state[4], unsigned char block[64])
     state[2] += c;
     state[3] += d;
 }
+
+void MD5_hex(unsigned char* digest, char* md5_string) {
+    for (int i = 0; i < MD5_DIGEST_LENGTH; i++) {
+        sprintf(&md5_string[i * 2], "%02x", digest[i]);
+    }
+    md5_string[MD5_DIGEST_LENGTH * 2] = '\0';
+}

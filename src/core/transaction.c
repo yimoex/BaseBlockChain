@@ -1,8 +1,7 @@
-Transaction* transaction_make(char from[], char to[], int64_t amount, char signature[]){
+Transaction* transaction_make(const char* from, const char* to, int64_t amount){
     Transaction* trans = (Transaction *)malloc(sizeof(Transaction));
     strcpy(trans -> from, from);
     strcpy(trans -> to, to);
-    strcpy(trans -> signature, signature);
     trans -> amount = amount;
     return trans;
 }
@@ -13,8 +12,30 @@ cJSON* transaction2json(Transaction* tx){
     cJSON_AddNumberToObject(json, "amount", tx -> amount);
     cJSON_AddStringToObject(json, "from", tx -> from);
     cJSON_AddStringToObject(json, "to", tx -> to);
-    cJSON_AddStringToObject(json, "signature", tx -> signature);
     return json;
+}
+
+char* transaction_serialize(Transaction* tx){
+    cJSON* json = transaction2json(tx);
+    char* json_string = cJSON_Print(json);
+    cJSON_Delete(json);
+    return json_string;
+}
+
+int transaction_signature(Transaction* transaction, const char* key, char* res){
+    unsigned int signSize;
+    char* buffer = char_create(HASH_LENGTH);
+    char* result = char_create(HASH_LENGTH);
+
+    char* str = transaction_serialize(transaction);
+
+    blockchain_hash(str, buffer);
+    signature_sign(key, buffer, res, &signSize);
+
+    free(buffer);
+    free(str);
+
+    return signSize;
 }
 
 char* transaction_list_serialize(Transaction transactions[], int transactionSize){
